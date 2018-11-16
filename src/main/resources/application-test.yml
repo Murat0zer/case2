@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:h2:~/development/apps/case2
+
+  profiles:
+    active: test
+  jpa:
+    open-in-view: false
+    hibernate.ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
+        type: trace
+  messages:
+    basename: ValidationMessages
+
+logging.level:
+  com.trendyol.Case2: trace
+  org.hibernate.type.descriptor.sql.BasicBinder: TRACE
