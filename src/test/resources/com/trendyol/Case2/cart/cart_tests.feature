@@ -16,7 +16,6 @@
     Diyelim ki Kullanici sepetinde zaten olan bir urunden sepetine 5 adet eklemek istiyor
     O zaman Sistem kullanicinin sepetindeki ilgili urununun sayisini 5 artirir
 
-
   Senaryo: 4 - Sepet icin teslimat ucreti hesaplanmasi
     Diyelim ki Kullanicinin sepetindeki urunler icin teslimat ucreti hesaplaniyor
     Eğer ki Kullanicinin sepetinde en az 1 urun var ise
@@ -27,10 +26,9 @@
     Eğer ki Kategori icin birden fazla kampanya tanimli ise
     O zaman Sistem kullanicinin sepeti icin mumkun olan en iyi kategori indirimini hesaplar
 
-  Senaryo: 6 - Sepeti icin kullanici kupon aktif ederse olacak durum
-    Diyelim ki Kullanicinin elinde bir indirim kuponu var
-    Eğer ki Kullanici bu kuponu kullanmak isterse
-    O zaman Sistem ilk once kullanici sepeti icin gerekli diger indirimleri hesaplar
+  Senaryo: 6 - Kullanici sepeti icin indirim kuponu kullanmak isterse neler yasanmali
+    Diyelim ki Kullanici indirim kuponu kullanmak istiyor
+    O zaman Sistem ilk once kullanicinin sepeti icin gerekli diger indirimleri hesaplar
     Eğer ki Hesaplanan deger kuponu kullanmak icin gerekli olan asgari degere esit veya buyuk ise
     O zaman Sistem kullanicinin sepeti icin kupon degeri kadar indirimi uygular
 

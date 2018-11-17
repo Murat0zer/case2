@@ -12,7 +12,7 @@ public class CartItemGenerator {
 
     private CartItemGenerator() {}
 
-    public static Set<CartItem> generateRandomCarts(int count, Set<Product> products) {
+    public static Set<CartItem> generateRandomCartItems(int count, Set<Product> products) {
 
         Set<CartItem> cartItems = new HashSet<>();
 

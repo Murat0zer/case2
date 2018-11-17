@@ -16,11 +16,9 @@ import com.trendyol.Case2.user.User;
 import com.trendyol.Case2.user.UserRepository;
 import com.trendyol.Case2.user.UserService;
 import com.trendyol.Case2.util.*;
-import cucumber.api.PendingException;
 import cucumber.api.java.tr.Diyelimki;
 import cucumber.api.java.tr.Eğerki;
 import cucumber.api.java.tr.Ozaman;
-import gherkin.lexer.Ca;
 import lombok.RequiredArgsConstructor;
 import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsEmptyCollection;
@@ -52,9 +50,9 @@ public class CartTests extends SpringBootTestConfig { // NOSONAR
     private final CartService cartService;
 
     private final CartRepository cartRepository;
-    Predicate<CartItem> cartItemPredicate;
-    Set<Product> products;
-    Set<Category> categories;
+    private Predicate<CartItem> cartItemPredicate;
+    private Set<Product> products;
+    private Set<Category> categories;
     private Cart cart = Cart.builder().build();
     private User user = User.builder().build();
     private Product product = Product.builder().build();
@@ -245,7 +243,7 @@ public class CartTests extends SpringBootTestConfig { // NOSONAR
         }
 
 
-        Set<CartItem> cartItems = CartItemGenerator.generateRandomCarts(20, products);
+        Set<CartItem> cartItems = CartItemGenerator.generateRandomCartItems(20, products);
 
         Set<Cart> carts = CartGenerator.generateRandomCarts(1, cartItems, user.getId());
         cartRepository.saveAll(carts);
@@ -259,6 +257,7 @@ public class CartTests extends SpringBootTestConfig { // NOSONAR
 
     @Ozaman("^Sistem kullanicinin sepeti icin teslimat ucretini hesaplar$")
     public void sistemKullanicininSepetiIcinTeslimatUcretiniHesaplar() throws Throwable {
+
         double costPertDelivery = 5.75;
         double costPerProduct = 2.75;
         double fixedCost = 2.99;
@@ -341,7 +340,7 @@ public class CartTests extends SpringBootTestConfig { // NOSONAR
         cart.setCartItems(cartItems);
         cartRepository.save(cart);
     }
-    Set<Campaign> campaigns;
+    private Set<Campaign> campaigns;
     @Eğerki("^Kategori icin birden fazla kampanya tanimli ise$")
     public void kategoriIcinBirdenFazlaKampanyaTanimliIse() throws Throwable {
 
@@ -372,40 +371,61 @@ public class CartTests extends SpringBootTestConfig { // NOSONAR
 
     @Ozaman("^Sistem kullanicinin sepeti icin mumkun olan en iyi kategori indirimini hesaplar$")
     public void sistemKullanicininSepetiIcinMumkunOlanEnIyiKategoriIndiriminiHesaplar() throws Throwable {
-        double totalPriceBeforeDiscounts = 150.0 + 250.0 + 25.0;
         double expectedTotalPriceAfterDiscounts = 120.0 + 125.0 + 10.0;
 
         cartService.applyDiscounts(cart, campaigns);
         assertEquals(expectedTotalPriceAfterDiscounts, cart.getTotalAmountAfterDiscounts(), 0.001);
     }
 
-    @Diyelimki("^Kullanicinin elinde bir indirim kuponu var$")
-    public void kullanicininElindeBirIndirimKuponuVar() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+
+    private Coupon coupon;
+    @Diyelimki("^Kullanici indirim kuponu kullanmak istiyor$")
+    public void kullaniciIndirimKuponuKullanmakIstiyor() throws Throwable {
+
+        coupon = Coupon.builder()
+                .discountType(DiscountType.RATE)
+                .discountValue(10.0)
+                .necessaryValue(100.0)
+                .build();
+
+        categories = CategoryGenerator.getAllCategories();
+        products = ProductGenerator.generateRandomProducts(100, categories);
+        Set<CartItem> cartItems = CartItemGenerator.generateRandomCartItems(20, products);
+        cart = Cart.builder()
+                .couponDiscount(0)
+                .campaignDiscount(0)
+                .totalAmountAfterDiscounts(0)
+                .deliveryCost(0)
+                .cartItems(cartItems)
+                .userId(user.getId())
+                .build();
     }
 
-    @Eğerki("^Kullanici bu kuponu kullanmak isterse$")
-    public void kullaniciBuKuponuKullanmakIsterse() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }
 
-    @Ozaman("^Sistem ilk once kullanici sepeti icin gerekli diger indirimleri hesaplar$")
-    public void sistemIlkOnceKullaniciSepetiIcinGerekliDigerIndirimleriHesaplar() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+    @Ozaman("^Sistem ilk once kullanicinin sepeti icin gerekli diger indirimleri hesaplar$")
+    public void sistemIlkOnceKullanicininSepetiIcinGerekliDigerIndirimleriHesaplar() throws Throwable {
+        double expectedTotalPriceAfterDiscounts = CartUtil.calculateTotalPrice(cart);
+        campaigns = new HashSet<>();
+        cartService.applyDiscounts(cart, campaigns);
+        assertEquals(expectedTotalPriceAfterDiscounts, cart.getTotalAmountAfterDiscounts(), 0.001);
     }
 
     @Eğerki("^Hesaplanan deger kuponu kullanmak icin gerekli olan asgari degere esit veya buyuk ise$")
     public void hesaplananDegerKuponuKullanmakIcinGerekliOlanAsgariDegereEsitVeyaBuyukIse() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+        assertThat(cart.getTotalAmountAfterDiscounts(), Matchers.greaterThanOrEqualTo(coupon.getNecessaryValue()));
     }
 
     @Ozaman("^Sistem kullanicinin sepeti icin kupon degeri kadar indirimi uygular$")
     public void sistemKullanicininSepetiIcinKuponDegeriKadarIndirimiUygular() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+
+        double v = cart.getTotalAmountAfterDiscounts();
+
+        double discount = coupon.getDiscountType() == DiscountType.AMOUNT ? coupon.getDiscountValue()
+                : cart.getTotalAmountAfterDiscounts() * coupon.getDiscountValue() / 100.0;
+
+        cartService.applyCoupon(cart, coupon);
+        assertEquals(v - discount, cart.getTotalAmountAfterDiscounts(), 0.001);
     }
+
+
 }

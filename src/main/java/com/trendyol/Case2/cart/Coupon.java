@@ -17,9 +17,9 @@ public class Coupon implements Serializable {
     @Id
     private String id;
 
-    private int discountValue;
+    private double discountValue;
 
-    private int necessaryValue;
+    private double necessaryValue;
 
     private DiscountType discountType;
 }

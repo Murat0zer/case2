@@ -1,14 +1,16 @@
 package com.trendyol.Case2.cart;
 
 
-import com.google.common.collect.Lists;
 import com.trendyol.Case2.category.Campaign;
-import com.trendyol.Case2.category.DiscountType;
+import com.trendyol.Case2.category.Category;
+import com.trendyol.Case2.category.CategoryRepository;
 import com.trendyol.Case2.response.ResponseMessage;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -18,6 +20,8 @@ public class CartService {
     private final CartRepository cartRepository;
 
     private final CartMessageProvider cartMessageProvider;
+
+    private final CategoryRepository categoryRepository;
 
     @Transactional
     public ResponseMessage saveCart(Cart cart) {
@@ -33,39 +37,21 @@ public class CartService {
 
     public void applyDiscounts(Cart cart, Set<Campaign> campaigns) {
 
-        Set<CartItem> cartItems = cart.getCartItems();
-        double totalCartItemPriceBeforeDiscount;
-        double maxDiscountForCartItem;
-        double discount;
-        double totalDiscount = 0;
-        double totalAmountBeforeDiscount = 0.0;
+        CartUtil.applyDiscounts(cart, campaigns);
+        cartRepository.save(cart);
+    }
 
-        for (CartItem cartItem : cartItems) {
-            maxDiscountForCartItem = 0;
-            double productPrice = cartItem.getProduct().getPrice().doubleValue();
-            int quantity = cartItem.getQuantity();
-            totalCartItemPriceBeforeDiscount = productPrice * quantity;
-            totalAmountBeforeDiscount += totalCartItemPriceBeforeDiscount;
-            String campCategoryTitle = Lists.newArrayList(cartItem.getProduct().getCategories()).get(0).getTitle();
-            for (Campaign campaign : campaigns) {
+    public void applyCoupon(Cart cart, Coupon coupon) {
 
-                boolean exp1 = campaign.getCategoryId().equals(campCategoryTitle);
-                boolean exp2 = quantity >= campaign.getNecessaryQuantity();
-                boolean exp3 = campaign.getDiscountType() == DiscountType.RATE;
-                if (exp1 && exp2 && exp3) {
-                    discount = totalCartItemPriceBeforeDiscount * campaign.getDiscountValue() / 100.0;
-                } else if (exp1 && exp2) {
-                    discount = campaign.getDiscountValue();
-                } else
-                    continue;
-                maxDiscountForCartItem = discount > maxDiscountForCartItem ? discount : maxDiscountForCartItem;
-            }
-
-            totalDiscount += maxDiscountForCartItem;
-
+        Set<Campaign> allCampaigns = new HashSet<>();
+        for (Category category : categoryRepository.findAll()) {
+            if(Objects.nonNull(category.getCampaigns()))
+                allCampaigns.addAll(category.getCampaigns());
         }
-        cart.setCampaignDiscount(totalDiscount);
-        cart.setTotalAmountAfterDiscounts(totalAmountBeforeDiscount - totalDiscount);
+
+        this.applyDiscounts(cart, CartUtil.returnAvailableCampaigns(cart, allCampaigns));
+        CartUtil.applyCoupon(cart, coupon);
+        cartRepository.save(cart);
 
     }
 }
