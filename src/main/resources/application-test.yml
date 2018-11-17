@@ -1,21 +1,18 @@
-spring:
-  datasource:
-    url: jdbc:h2:~/development/apps/case2
+messages:
+  basename: ValidationMessages
 
-  profiles:
-    active: test
-  jpa:
-    open-in-view: false
-    hibernate.ddl-auto: create
-    properties:
-      hibernate:
-        show_sql: true
-        use_sql_comments: true
-        format_sql: true
-        type: trace
-  messages:
-    basename: ValidationMessages
+spring.profiles.active: test
+server.port: 8090
 
 logging.level:
   com.trendyol.Case2: trace
-  org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+# Couchbase Settings
+spring:
+  data:
+    couchbase.auto-index: true
+case2:
+  couchbase:
+    host-name: 127.0.0.1
+    default-host-name: localhost
+    bucket-pass: jfFMd8Nd

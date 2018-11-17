@@ -2,6 +2,7 @@ package com.trendyol.Case2.cart;
 
 import com.trendyol.Case2.product.Product;
 import lombok.*;
+import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 
@@ -10,12 +11,16 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
- class CartItem implements Serializable {
+ public class CartItem implements Serializable {
 
-    private Long productId;
+    @Id
+    private String id;
 
-    private int count;
+    private int quantity;
 
     private Product product;
+
+    private String cartId;
+
 
 }

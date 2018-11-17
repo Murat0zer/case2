@@ -20,7 +20,6 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
-@PropertySource(value = {"classpath:product.properties", "classpath:category.properties"})
 @RequiredArgsConstructor
 @Ignore
 public class CategoryTests extends SpringBootTestConfig { // NOSONAR

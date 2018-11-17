@@ -1,10 +1,13 @@
 package com.trendyol.Case2.cart;
 
 
+import com.trendyol.Case2.user.User;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -13,18 +16,18 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+
+@Document(collection = "carts")
+@CompoundIndexes(
+        @CompoundIndex(def = "{'id':1}")
+)
 public class Cart implements Serializable {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    private String id;
 
-    @OneToOne
-    @NotBlank
-    private Long userId;
+    private String userId;
 
-    @ElementCollection(targetClass = CartItem.class)
     private Set<CartItem> cartItems;
 
 }

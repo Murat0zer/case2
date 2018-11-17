@@ -18,6 +18,7 @@ public class UserGenerator {
         for (int i = 0; i < count; i++) {
             User user = User.builder()
                     .email(fairy.person().getEmail())
+                    .username(fairy.person().getUsername())
                     .firstName(fairy.person().getFirstName())
                     .lastName(fairy.person().getLastName())
                     .password(fairy.person().getPassword())

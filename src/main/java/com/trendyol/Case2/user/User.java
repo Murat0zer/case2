@@ -1,34 +1,35 @@
 package com.trendyol.Case2.user;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Data
 @EqualsAndHashCode
 @Builder
-@Entity
-public class User {
+@NoArgsConstructor
+@AllArgsConstructor
+@Document(collection = "users")
+@CompoundIndexes(
+        @CompoundIndex(def = "{'id':1}")
+)
+public class User implements Serializable {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    private String id;
 
     @Size(min = 3)
     @NotBlank
-    @Column(unique = true)
     private String username;
 
     @Email
-    @Column(unique = true)
     private String email;
 
     @NotBlank

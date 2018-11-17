@@ -30,7 +30,6 @@ import java.util.Set;
 import static org.junit.Assert.*;
 
 
-@PropertySource(value = {"classpath:product.properties", "classpath:category.properties"})
 @Ignore
 @RequiredArgsConstructor
 public class ProductTests extends SpringBootTestConfig { // NOSONAR
@@ -114,9 +113,7 @@ public class ProductTests extends SpringBootTestConfig { // NOSONAR
     public void urunYoneticisiSistemeGecersizBirKategoriIleYeniBirUrunEklemekIstiyor() throws Throwable {
 
         this.init();
-        product.getCategories().add(Category.builder().id(123L).title("gecersiz kategori").build());
-
-
+        product.getCategories().add(Category.builder().id("1234").title("gecersiz kategori").build());
     }
 
     @Eğerki("^Urun yoneticisi eklenecek urun icin gecerli bir kategori girmediyse$")
@@ -140,8 +137,6 @@ public class ProductTests extends SpringBootTestConfig { // NOSONAR
         ResponseMessage responseMessage = productService.addNewProduct(product);
 
         assertEquals(exceptedReturnMessage, responseMessage.getMessage());
-
     }
-
 
 }

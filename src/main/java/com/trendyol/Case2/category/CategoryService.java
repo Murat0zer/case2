@@ -64,7 +64,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public ResponseMessage findByCategoryId(Long id)   {
+    public ResponseMessage findByCategoryId(String id)   {
 
         ResponseMessage responseMessage = new ResponseMessage();
         Category category = categoryRepository.findById(id).orElseThrow(() -> {
@@ -79,6 +79,7 @@ public class CategoryService {
         return responseMessage;
     }
 
+    @Transactional
     public ResponseMessage findByCategoryTitle(String title) {
         ResponseMessage responseMessage = new ResponseMessage();
         Category category = categoryRepository.findByTitleEquals(title).orElseThrow(() -> {

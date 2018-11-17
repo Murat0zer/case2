@@ -10,6 +10,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+@PropertySource(value = {"classpath:product.properties"})
+@PropertySource(value = {"classpath:cart.properties"})
+@PropertySource(value = {"classpath:category.properties"})
 @PropertySource(value = {"classpath:ValidationMessages.properties"})
 @Slf4j
 @ContextConfiguration(classes = {CucumberConfiguration.class})
