@@ -29,4 +29,6 @@ public class Category implements Serializable {
     private String title;
 
     private Set<String> parentCategories;
+
+    private Set<Campaign> campaigns;
 }

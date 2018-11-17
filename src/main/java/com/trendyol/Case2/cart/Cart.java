@@ -1,6 +1,7 @@
 package com.trendyol.Case2.cart;
 
 
+import com.trendyol.Case2.category.Campaign;
 import com.trendyol.Case2.user.User;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -29,5 +30,13 @@ public class Cart implements Serializable {
     private String userId;
 
     private Set<CartItem> cartItems;
+
+    private double deliveryCost;
+
+    private double totalAmountAfterDiscounts;
+
+    private double couponDiscount;
+
+    private double campaignDiscount;
 
 }

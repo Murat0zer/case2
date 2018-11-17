@@ -42,6 +42,11 @@ public class Case2Application {
         return PropertiesLoaderUtils.loadAllProperties("cart.properties");
     }
 
+    @Bean
+    public Properties campaignProperties() throws IOException {
+        return PropertiesLoaderUtils.loadAllProperties("campaign.properties");
+    }
+
 	public static void main(String[] args) {
 		SpringApplication.run(Case2Application.class, args);
 	}

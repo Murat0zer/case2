@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
- public class CartItem implements Serializable {
+public class CartItem implements Serializable {
 
     @Id
     private String id;

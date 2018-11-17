@@ -45,5 +45,21 @@ public class CategoryGenerator {
         return categories;
     }
 
+    public static Set<Category> getAllCategories() {
+        generateCategoryNames();
+        Set<Category> categorySet = new HashSet<>();
+
+        categories.forEach((categoryTitle, parentCategoryList) -> {
+            Category category = Category.builder()
+                    .title(categoryTitle)
+                    .parentCategories(new HashSet<>(CategoryGenerator.categories.get(categoryTitle)))
+                    .build();
+
+            categorySet.add(category);
+
+        } );
+        return  categorySet;
+    }
+
 
 }
