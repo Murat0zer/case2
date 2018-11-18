@@ -14,5 +14,5 @@ spring:
       basename: ValidationMessages
 
 logging.level:
-  com.trendyol.Case2: trace
+  com.trendyol.case2: trace
   org.hibernate.type.descriptor.sql.BasicBinder: TRACE
